@@ -35,7 +35,6 @@ void californiaSignalShapes(int channel, int sqrts){
   if (channel == 3) schannel = "2e2mu";
   cout << "Final state = " << schannel << " and sqrt(s) = " << sqrts << endl;
 
-
   char tmp_outCardName[200];
   sprintf(tmp_outCardName,"%iTeV_",sqrts);
   string prependName = "CardFragments/signalFunctions_";
