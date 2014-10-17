@@ -374,7 +374,7 @@ class datacardClass:
             if self.isHighMass : rfv_n_CB = ROOT.RooFormulaVar(name,"("+theInputs['n_CB_shape_HM']+")"+"*(1+@1)",ROOT.RooArgList(self.MH,CMS_zz4l_n))
             else : rfv_n_CB = ROOT.RooFormulaVar(name,"("+theInputs['n_CB_shape']+")"+"*(1+@1)",ROOT.RooArgList(self.MH,CMS_zz4l_n))
             
-            name = "CMS_zz4l_alpha_{0:.0f}_centralValue".format(self.channel)
+            name = "CMS_zz4l_alpha_{0:.0f}_{1:.0f}_centralValue".format(self.channel,self.sqrts)
             if self.isHighMass : rfv_alpha_CB = ROOT.RooFormulaVar(name,theInputs['alpha_CB_shape_HM'], ROOT.RooArgList(self.MH))
             else : rfv_alpha_CB = ROOT.RooFormulaVar(name,theInputs['alpha_CB_shape'], ROOT.RooArgList(self.MH))
             
@@ -384,7 +384,7 @@ class datacardClass:
             if self.isHighMass : rfv_n2_CB = ROOT.RooFormulaVar(name,"("+theInputs['n2_CB_shape_HM']+")",ROOT.RooArgList(self.MH))
             else : rfv_n2_CB = ROOT.RooFormulaVar(name,"("+theInputs['n2_CB_shape']+")",ROOT.RooArgList(self.MH))
 
-            name = "CMS_zz4l_alpha2_{0:.0f}_centralValue".format(self.channel)
+            name = "CMS_zz4l_alpha2_{0:.0f}_{1:.0f}_centralValue".format(self.channel,self.sqrts)
             if self.isHighMass : rfv_alpha2_CB = ROOT.RooFormulaVar(name,theInputs['alpha2_CB_shape_HM'], ROOT.RooArgList(self.MH))
             else : rfv_alpha2_CB = ROOT.RooFormulaVar(name,theInputs['alpha2_CB_shape'], ROOT.RooArgList(self.MH))
             
@@ -394,7 +394,7 @@ class datacardClass:
             if self.isHighMass : rfv_n_CB = ROOT.RooFormulaVar(name,"("+theInputs['n_CB_shape_HM']+")"+"*(1+@1)",ROOT.RooArgList(self.MH,CMS_zz4l_n))
             else : rfv_n_CB = ROOT.RooFormulaVar(name,"("+theInputs['n_CB_shape']+")"+"*(1+@1)",ROOT.RooArgList(self.MH,CMS_zz4l_n))
             
-            name = "CMS_zz4l_alpha_{0:.0f}_{1}_centralValue".format(self.channel,self.VBFcat)
+            name = "CMS_zz4l_alpha_{0:.0f}_{1:.0f}_{2}_centralValue".format(self.channel,self.sqrts,self.VBFcat)
             if self.isHighMass : rfv_alpha_CB = ROOT.RooFormulaVar(name,theInputs['alpha_CB_shape_HM'], ROOT.RooArgList(self.MH))
             else : rfv_alpha_CB = ROOT.RooFormulaVar(name,theInputs['alpha_CB_shape'], ROOT.RooArgList(self.MH))
             
@@ -404,7 +404,7 @@ class datacardClass:
             if self.isHighMass : rfv_n2_CB = ROOT.RooFormulaVar(name,"("+theInputs['n2_CB_shape_HM']+")",ROOT.RooArgList(self.MH))
             else : rfv_n2_CB = ROOT.RooFormulaVar(name,"("+theInputs['n2_CB_shape']+")",ROOT.RooArgList(self.MH))
 
-            name = "CMS_zz4l_alpha2_{0:.0f}_{1}_centralValue".format(self.channel,self.VBFcat)
+            name = "CMS_zz4l_alpha2_{0:.0f}_{1:.0f}_{2}_centralValue".format(self.channel,self.sqrts,self.VBFcat)
             if self.isHighMass : rfv_alpha2_CB = ROOT.RooFormulaVar(name,theInputs['alpha2_CB_shape_HM'], ROOT.RooArgList(self.MH))
             else : rfv_alpha2_CB = ROOT.RooFormulaVar(name,theInputs['alpha2_CB_shape'], ROOT.RooArgList(self.MH))
             
@@ -1485,7 +1485,7 @@ class datacardClass:
                 print "norm 2p2f 4e: ",nlZjet_2p2f.getVal()
                 print "pol0 2p2f 4e: ",p0Zjet_2p2f.getVal()
                 print "pol1 2p2f 4e: ",p1Zjet_2p2f.getVal()
-                bkg_zjets_2p2f = ROOT.RooGenericPdf("bkg_zjetsTmp_2p2f","bkg_zjetsTmp_2p2f","(TMath::Landau(@0,@1,@2))*@3*(1.+ TMath::Exp(@4+@5*@0))",RooArgList(CMS_zz4l_mass,mlZjet_2p2f,slZjet_2p2f,nlZjet_2p2f,p0Zjet_2p2f,p1Zjet_2p2f))
+                bkg_zjets_2p2f = ROOT.RooGenericPdf("bkg_zjetsTmp_2p2f","bkg_zjetsTmp_2p2f","(TMath::Landau(@0,@1,@2))*(1.+ TMath::Exp(@3+@4*@0))",RooArgList(CMS_zz4l_mass,mlZjet_2p2f,slZjet_2p2f,p0Zjet_2p2f,p1Zjet_2p2f))
                 
                 name = "mlZjet_3p1f_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
                 mlZjet_3p1f = ROOT.RooRealVar(name,"mean landau Zjet 3p1f",val_meanL_3P1F)
@@ -1507,10 +1507,16 @@ class datacardClass:
                 slZjet_2p2f = ROOT.RooRealVar(name,"sigma landau Zjet 2p2f",val_sigmaL_2P2F)
                 name = "nlZjet_2p2f_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
                 nlZjet_2p2f = ROOT.RooRealVar(name,"norm landau Zjet 2p2f",val_normL_2P2F)
+                name = "p0Zjet_2p2f_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
+                p0Zjet_2p2f = ROOT.RooRealVar(name,"p0 Zjet 2p2f",val_pol0_2P2F)
+                name = "p1Zjet_2p2f_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
+                p1Zjet_2p2f = ROOT.RooRealVar(name,"p1 Zjet 2p2f",val_pol1_2P2F)
                 print "mean 2p2f 2mu2e: ",mlZjet_2p2f.getVal()
                 print "sigma 2p2f 2mu2e: ",slZjet_2p2f.getVal()
                 print "norm 2p2f 2mu2e: ",nlZjet_2p2f.getVal()
-                bkg_zjets_2p2f = ROOT.RooLandau("bkg_zjetsTmp_2p2f","bkg_zjetsTmp_2p2f",CMS_zz4l_mass,mlZjet_2p2f,slZjet_2p2f)
+                print "pol0 2p2f 2mu2e: ",p0Zjet_2p2f.getVal()
+                print "pol1 2p2f 2mu2e: ",p1Zjet_2p2f.getVal()
+                bkg_zjets_2p2f = ROOT.RooGenericPdf("bkg_zjetsTmp_2p2f","bkg_zjetsTmp_2p2f","(TMath::Landau(@0,@1,@2))*(1.+ TMath::Exp(@3+@4*@0))",RooArgList(CMS_zz4l_mass,mlZjet_2p2f,slZjet_2p2f,p0Zjet_2p2f,p1Zjet_2p2f))
 
                 name = "mlZjet_2p2f_2_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
                 mlZjet_2p2f_2 = ROOT.RooRealVar(name,"mean landau Zjet 2p2f 2e2mu",val_meanL_2P2F_2)
@@ -1561,7 +1567,7 @@ class datacardClass:
                 print "norm 2p2f 4e: ",nlZjet_2p2f.getVal()
                 print "pol0 2p2f 4e: ",p0Zjet_2p2f.getVal()
                 print "pol1 2p2f 4e: ",p1Zjet_2p2f.getVal()
-                bkg_zjets_2p2f = ROOT.RooGenericPdf("bkg_zjetsTmp_2p2f","bkg_zjetsTmp_2p2f","(TMath::Landau(@0,@1,@2))*@3*(1.+ TMath::Exp(@4+@5*@0))",RooArgList(CMS_zz4l_mass,mlZjet_2p2f,slZjet_2p2f,nlZjet_2p2f,p0Zjet_2p2f,p1Zjet_2p2f))
+                bkg_zjets_2p2f = ROOT.RooGenericPdf("bkg_zjetsTmp_2p2f","bkg_zjetsTmp_2p2f","(TMath::Landau(@0,@1,@2))*(1.+ TMath::Exp(@3+@4*@0))",RooArgList(CMS_zz4l_mass,mlZjet_2p2f,slZjet_2p2f,p0Zjet_2p2f,p1Zjet_2p2f))
                 
                 name = "mlZjet_3p1f_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat)
                 mlZjet_3p1f = ROOT.RooRealVar(name,"mean landau Zjet 3p1f",val_meanL_3P1F)
@@ -1583,10 +1589,16 @@ class datacardClass:
                 slZjet_2p2f = ROOT.RooRealVar(name,"sigma landau Zjet 2p2f",val_sigmaL_2P2F)
                 name = "nlZjet_2p2f_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat)
                 nlZjet_2p2f = ROOT.RooRealVar(name,"norm landau Zjet 2p2f",val_normL_2P2F)
+                name = "p0Zjet_2p2f_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts, self.VBFcat)
+                p0Zjet_2p2f = ROOT.RooRealVar(name,"p0 Zjet 2p2f",val_pol0_2P2F)
+                name = "p1Zjet_2p2f_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts, self.VBFcat)
+                p1Zjet_2p2f = ROOT.RooRealVar(name,"p1 Zjet 2p2f",val_pol1_2P2F)
                 print "mean 2p2f 2mu2e: ",mlZjet_2p2f.getVal()
                 print "sigma 2p2f 2mu2e: ",slZjet_2p2f.getVal()
                 print "norm 2p2f 2mu2e: ",nlZjet_2p2f.getVal()
-                bkg_zjets_2p2f = ROOT.RooLandau("bkg_zjetsTmp_2p2f","bkg_zjetsTmp_2p2f",CMS_zz4l_mass,mlZjet_2p2f,slZjet_2p2f)
+                print "pol0 2p2f 2mu2e: ",p0Zjet_2p2f.getVal()
+                print "pol1 2p2f 2mu2e: ",p1Zjet_2p2f.getVal()
+                bkg_zjets_2p2f = ROOT.RooGenericPdf("bkg_zjetsTmp_2p2f","bkg_zjetsTmp_2p2f","(TMath::Landau(@0,@1,@2))*(1.+ TMath::Exp(@3+@4*@0))",RooArgList(CMS_zz4l_mass,mlZjet_2p2f,slZjet_2p2f,p0Zjet_2p2f,p1Zjet_2p2f))
 
                 name = "mlZjet_2p2f_2_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat)
                 mlZjet_2p2f_2 = ROOT.RooRealVar(name,"mean landau Zjet 2p2f 2e2mu",val_meanL_2P2F_2)
