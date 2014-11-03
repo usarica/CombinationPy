@@ -1036,15 +1036,15 @@ class datacardClass:
             TemplateName += "_{0}".format(self.VBFcat)
         sigTemplatePdf_ZH_Down = ROOT.RooHistPdf(TemplateName,TemplateName,ROOT.RooArgSet(CMS_zz4l_mass,D),sigTempDataHist_Down)
         
-        TemplateName = "sigTemplatePdf_ZH_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
+        TemplateName = "sigTemplatePdf_ttH_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
         if(self.bVBF):
             TemplateName += "_{0}".format(self.VBFcat)
         sigTemplatePdf_ttH = ROOT.RooHistPdf(TemplateName,TemplateName,ROOT.RooArgSet(CMS_zz4l_mass,D),sigTempDataHist)
-        TemplateName = "sigTemplatePdf_ZH_Up_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
+        TemplateName = "sigTemplatePdf_ttH_Up_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
         if(self.bVBF):
             TemplateName += "_{0}".format(self.VBFcat)
         sigTemplatePdf_ttH_Up = ROOT.RooHistPdf(TemplateName,TemplateName,ROOT.RooArgSet(CMS_zz4l_mass,D),sigTempDataHist_Up)
-        TemplateName = "sigTemplatePdf_ZH_Down_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
+        TemplateName = "sigTemplatePdf_ttH_Down_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
         if(self.bVBF):
             TemplateName += "_{0}".format(self.VBFcat)
         sigTemplatePdf_ttH_Down = ROOT.RooHistPdf(TemplateName,TemplateName,ROOT.RooArgSet(CMS_zz4l_mass,D),sigTempDataHist_Down)
