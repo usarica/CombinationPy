@@ -86,9 +86,9 @@ def creationLoop(directory):
 #    stepSizes=[  2.0,   5.0,   10.0,  20.0,  50.0 ]
 #    endVal   =[   45,    12,    4,     10,    9   ]
 
-    startMass=[ 124.5]
+    startMass=[ 125.6]
     stepSizes=[ 0.1]
-    endVal=[     20]
+    endVal=[     1]
 
 #    startMass=  [ 110.0, 124.5, 126.5, 130.0]
 #    stepSizes=  [  0.5,   0.1,   0.5,   1.0]
