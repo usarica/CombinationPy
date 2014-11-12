@@ -18,7 +18,7 @@ channels ggH qqH WH ZH ttH qqZZ ggZZ zjets
 ## rates --- format = chan N lumi ##
 ## if lumi is blank, lumi for cards used ##
 rate qqZZ  0.658595
-rate ggZZ  0.0616604
+rate ggZZ  0.1258
 rate zjets 0.274
 
 ## signal functions --- no spaces! ##
