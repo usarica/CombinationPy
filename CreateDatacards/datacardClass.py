@@ -2516,13 +2516,22 @@ class datacardClass:
         print "!!!%%%*** ",integral_ggH
         
 
+# Add custom efficiency corrections
+        customEffName = "cmshzz4l_efficiencyCorrectionggH_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
+        customEff_ggH = ROOT.RooRealVar(customEffName,customEffName, theInputs['ggH_eff'])
+        customEff_ggH.setConstant(True)
+        customEffName = "cmshzz4l_efficiencyCorrectionqqH_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
+        customEff_qqH = ROOT.RooRealVar(customEffName,customEffName, theInputs['qqH_eff'])
+        customEff_qqH.setConstant(True)
+
+
         #rfvSigRate_ggH = ROOT.RooFormulaVar("ggH_norm","@0*@1*1000*{0}*{2}/{1}".format(self.lumi,rrvNormSig.getVal(),self.getVariable(signalCB_ggH.createIntegral(RooArgSet(CMS_zz4l_mass),ROOT.RooFit.Range("shape")).getVal(),sig_ggH.createIntegral(RooArgSet(CMS_zz4l_mass),ROOT.RooFit.Range("shape")).getVal(),self.bUseCBnoConvolution)),ROOT.RooArgList(rfvSigEff_ggH, rhfXsBrFuncV_1))
 
-        rfvSigRate_ggH = ROOT.RooFormulaVar("ggH_norm","@0*@1*1000*{0}*{2}/{1}*{3}".format(self.lumi,rrvNormSig.getVal(),integral_ggH,self.getVariable(rfvTag_Ratio_ggH.getVal(),one.getVal(),self.bVBF)),ROOT.RooArgList(rfvSigEff_ggH, rhfXsBrFuncV_1))
+        rfvSigRate_ggH = ROOT.RooFormulaVar("ggH_norm","@0*@1*@2*1000*{0}*{2}/{1}*{3}".format(self.lumi,rrvNormSig.getVal(),integral_ggH,self.getVariable(rfvTag_Ratio_ggH.getVal(),one.getVal(),self.bVBF)),ROOT.RooArgList(rfvSigEff_ggH, rhfXsBrFuncV_1,customEff_ggH))
         
         print "Compare integrals: integral_ggH=",integral_ggH,"  ; calculated=",self.getVariable(signalCB_ggH.createIntegral(RooArgSet(CMS_zz4l_mass),ROOT.RooFit.Range("shape")).getVal(),sig_ggH.createIntegral(RooArgSet(CMS_zz4l_mass),ROOT.RooFit.Range("shape")).getVal(),self.bUseCBnoConvolution)
         
-        rfvSigRate_VBF = ROOT.RooFormulaVar("qqH_norm","@0*@1*1000*{0}*{2}/{1}*{3}".format(self.lumi,rrvNormSig.getVal(),integral_VBF,self.getVariable(rfvTag_Ratio_qqH.getVal(),one.getVal(),self.bVBF)),ROOT.RooArgList(rfvSigEff_qqH, rhfXsBrFuncV_2))
+        rfvSigRate_VBF = ROOT.RooFormulaVar("qqH_norm","@0*@1*@2*1000*{0}*{2}/{1}*{3}".format(self.lumi,rrvNormSig.getVal(),integral_VBF,self.getVariable(rfvTag_Ratio_qqH.getVal(),one.getVal(),self.bVBF)),ROOT.RooArgList(rfvSigEff_qqH, rhfXsBrFuncV_2,customEff_qqH))
         
         
         rfvSigRate_WH = ROOT.RooFormulaVar("WH_norm","@0*@1*1000*{0}*{2}/{1}*{3}".format(self.lumi,rrvNormSig.getVal(),integral_WH,self.getVariable(rfvTag_Ratio_WH.getVal(),one.getVal(),self.bVBF)),ROOT.RooArgList(rfvSigEff_WH, rhfXsBrFuncV_3))
@@ -2543,6 +2552,7 @@ class datacardClass:
         print " sigRate_ggH_Shape=",sigRate_ggH_Shape
         print " @@@@@@@ rfvSigRate_VBF = ",rfvSigRate_VBF.getVal()
         print " sigRate_VBF_Shape=",sigRate_VBF_Shape
+        print " @@@@@@@ rfvSigRate_VBF/xsec = {0:.12f}".format(rfvSigRate_VBF.getVal()/(CS_VBF*BR*1000.*self.lumi))
         print " @@@@@@@ rfvSigRate_WH = ",rfvSigRate_WH.getVal()
         print " sigRate_WH_Shape=",sigRate_WH_Shape
         print " @@@@@@@ rfvSigRate_ZH = ",rfvSigRate_ZH.getVal()

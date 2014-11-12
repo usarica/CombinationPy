@@ -20,6 +20,9 @@ channels ggH qqH WH ZH ttH qqZZ ggZZ zjets
 rate qqZZ  136.452
 rate ggZZ  25.8378
 rate zjets 7.4
+eff ggH 0.990693
+eff qqH 0.992525
+
 ## signal functions --- no spaces! ##
 usehighmassreweightedshapes
 signalShape n_CB TMath::Max((-13.9463)+(0.328247*@0)+(-0.00208904*@0*@0)+(5.30154e-06*@0*@0*@0)+(-4.91882e-09*@0*@0*@0*@0)+(4.42671e-13*@0*@0*@0*@0*@0),1)

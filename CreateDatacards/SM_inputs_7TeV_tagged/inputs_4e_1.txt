@@ -20,6 +20,8 @@ channels ggH qqH WH ZH ttH qqZZ ggZZ zjets
 rate qqZZ  0.658595
 rate ggZZ  0.1258
 rate zjets 0.274
+eff ggH 0.990920
+eff qqH 0.879962
 
 ## signal functions --- no spaces! ##
 usehighmassreweightedshapes

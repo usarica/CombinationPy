@@ -55,6 +55,9 @@ class inputReader:
         self.zjets_lumi = -999.9
         self.ttbar_lumi = -999.9
         self.zbb_lumi = -999.9
+        # Custom efficiency corrections (multiplicative factor)
+        self.ggH_eff = 1.
+        self.qqH_eff = 1.
         # signal shapes
         self.useHighMassReweightedShapes = True
         self.n_CB_shape = -999.9
@@ -325,6 +328,13 @@ class inputReader:
                 if f[1].lower().startswith("zbb"):
                     self.zbb_rate = float(f[2])
                     if len(f) == 4: self.zbb_lumi = float(f[3])
+
+            if f[0].lower().startswith("eff"):
+                if f[1].lower().startswith("ggh"):
+                    self.ggH_eff = float(f[2])
+                if f[1].lower().startswith("qqh"):
+                    self.qqH_eff = float(f[2])
+
 
             if f[0].lower().startswith("usehighmassreweightedshapes"):
                 self.useHighMassReweightedShapes = True
@@ -866,6 +876,9 @@ class inputReader:
         dict['zjets_rate'] = self.zjets_rate
         dict['ttbar_rate'] = self.ttbar_rate
         dict['zbb_rate'] = self.zbb_rate
+
+        dict['ggH_eff'] = self.ggH_eff
+        dict['qqH_eff'] = self.qqH_eff
 
         dict['qqZZ_lumi'] = float(self.qqZZ_lumi)
         dict['ggZZ_lumi'] = float(self.ggZZ_lumi) 
