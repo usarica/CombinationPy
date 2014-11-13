@@ -99,7 +99,7 @@ class datacardClass:
             return falseVar
     
     # main datacard and workspace function
-    def makeCardsWorkspaces(self, theMH, theis2D, theOutputDir, theInputs,theTemplateDir="templates2D", theIncludingError=False, theMEKD=False, theVBFcat=False, theUse3D=False):
+    def makeCardsWorkspaces(self, theMH, theis2D, theOutputDir, theInputs, options, theVBFcat=False, theUse3D=False):
 
         ## --------------- SETTINGS AND DECLARATIONS --------------- ##
         DEBUG = False
@@ -111,10 +111,18 @@ class datacardClass:
         self.outputDir = theOutputDir
         self.sigMorph = theInputs['useCMS_zz4l_sigMELA']
         self.bkgMorph = theInputs['useCMS_zz4l_bkgMELA']
-        self.templateDir = theTemplateDir
-	self.bIncludingError=theIncludingError
-	self.bMEKD = False
-        self.useMEKDTemplates = theMEKD
+        self.templateDir = options.templateDir
+        print "Template directory: ",self.templateDir
+        self.bIncludingError=options.massError
+        if self.bIncludingError:
+            print "Mass errors included"
+        self.bMEKD = False
+        self.useMEKDTemplates = options.mekd
+        if self.useMEKDTemplates:
+            print "Using MEKD templates "
+        self.ACindex = options.anomalousCouplingIndex
+        if self.ACindex>0:
+            print "Detected need for anomalous couplings"
         self.bVBF = False
         if(theInputs['useCMS_zz4l_doVBFtest']):
             self.bVBF = True
@@ -235,6 +243,30 @@ class datacardClass:
     
         self.MH = ROOT.RooRealVar("MH","MH",self.mH)
         self.MH.setConstant(True)
+
+# fai1 used in spin-parity and off-shell
+        fai1_name = "CMS_zz4l_fai1"
+        fai1 = ROOT.RooRealVar(fai1_name, fai1_name, -1, 1)
+        fai1.setVal(0)
+        fai1.setBins(200)
+        AnomCoupl_Name = "VVHrate_AnomCoupl_{0:.0f}_{1:.0f}".format(self.channel, self.sqrts)
+        if self.bVBF:
+            AnomCoupl_Name = "VVHrate_AnomCoupl_{0:.0f}_{1:.0f}_{2}".format(self.channel, self.sqrts,self.VBFcat)
+        VVH_AnomCoupl_Norm = ROOT.RooFormulaVar(
+            AnomCoupl_Name,
+            "TMath::Max( ( 1. - 2.*sign(@0)*sqrt(abs(@0)*(1-abs(@0))) ), 0.00001)",
+            ROOT.RooArgList(fai1)
+            )
+        AnomCoupl_Name = "VVHVVrate_AnomCoupl_{0:.0f}_{1:.0f}".format(self.channel, self.sqrts)
+        if self.bVBF:
+            AnomCoupl_Name = "VVHVVrate_AnomCoupl_{0:.0f}_{1:.0f}_{2}".format(self.channel, self.sqrts,self.VBFcat)
+        VVHVV_AnomCoupl_Norm = ROOT.RooFormulaVar(
+            AnomCoupl_Name,
+            "pow( @0 , 2)",
+            ROOT.RooArgList(VVH_AnomCoupl_Norm)
+            )
+
+
 
 	# n2, alpha2 are right side parameters of DoubleCB
 	# n, alpha are left side parameters of DoubleCB
@@ -1156,7 +1188,7 @@ class datacardClass:
 	####  ----------------------- mekd  parametrized double gaussian stuffs  -------------------------
 	discVarName = "mekd"
 	MEKD = ROOT.RooRealVar(discVarName, discVarName, -5, 15);
-	if theMEKD: 
+	if self.useMEKDTemplates: 
 		name = "mekd_sig_a0_{0:.0f}_{1:.0f}_centralValue".format(self.channel,self.sqrts)
 		mekd_sig_a0 = ROOT.RooFormulaVar(name,"("+theInputs['mekd_sig_a0_shape']+")", ROOT.RooArgList(CMS_zz4l_mass))
 		name = "mekd_sig_a1_{0:.0f}_{1:.0f}_centralValue".format(self.channel,self.sqrts)
@@ -1684,14 +1716,9 @@ class datacardClass:
                 FisherList_qqZZ.add(FisherTemplatePdf_qqZZ)
                 FisherList_qqZZ.add(FisherTemplatePdf_qqZZ_Up)
                 FisherList_qqZZ.add(FisherTemplatePdf_qqZZ_Dn) 
-                
                 FisherList_ggZZ.add(FisherTemplatePdf_ggZZ)
-                
-                FisherList_ZX.add(FisherTemplatePdf_ZX)  
-            
-            
+                FisherList_ZX.add(FisherTemplatePdf_ZX)
             else:
-            
                 FisherList_qqZZ.add(FisherTemplatePdf_qqZZ)
                 FisherList_ggZZ.add(FisherTemplatePdf_ggZZ)
                 FisherList_ZX.add(FisherTemplatePdf_ZX)
@@ -1946,7 +1973,7 @@ class datacardClass:
         bkgTemplateMorphPdf_zjets = ROOT.FastVerticalInterpHistPdf2D(TemplateName,TemplateName,CMS_zz4l_mass,D,true,funcList_zjets,morphVarListBkg,1.0,1)
 
 	####  ----------------------- mekd  parametrized double gaussian stuffs  -------------------------
-	if theMEKD: 
+	if self.useMEKDTemplates: 
 		name = "mekd_qqZZ_a0_{0:.0f}_{1:.0f}_centralValue".format(self.channel,self.sqrts)
 		print "mekd_qqZZ_a0_shape=",theInputs['mekd_qqZZ_a0_shape'] 
 		print "mekd_sig_a0_shape=",theInputs['mekd_sig_a0_shape'] 
@@ -2525,23 +2552,22 @@ class datacardClass:
         customEff_qqH.setConstant(True)
 
 
-        #rfvSigRate_ggH = ROOT.RooFormulaVar("ggH_norm","@0*@1*1000*{0}*{2}/{1}".format(self.lumi,rrvNormSig.getVal(),self.getVariable(signalCB_ggH.createIntegral(RooArgSet(CMS_zz4l_mass),ROOT.RooFit.Range("shape")).getVal(),sig_ggH.createIntegral(RooArgSet(CMS_zz4l_mass),ROOT.RooFit.Range("shape")).getVal(),self.bUseCBnoConvolution)),ROOT.RooArgList(rfvSigEff_ggH, rhfXsBrFuncV_1))
-
         rfvSigRate_ggH = ROOT.RooFormulaVar("ggH_norm","@0*@1*@2*1000*{0}*{2}/{1}*{3}".format(self.lumi,rrvNormSig.getVal(),integral_ggH,self.getVariable(rfvTag_Ratio_ggH.getVal(),one.getVal(),self.bVBF)),ROOT.RooArgList(rfvSigEff_ggH, rhfXsBrFuncV_1,customEff_ggH))
-        
-        print "Compare integrals: integral_ggH=",integral_ggH,"  ; calculated=",self.getVariable(signalCB_ggH.createIntegral(RooArgSet(CMS_zz4l_mass),ROOT.RooFit.Range("shape")).getVal(),sig_ggH.createIntegral(RooArgSet(CMS_zz4l_mass),ROOT.RooFit.Range("shape")).getVal(),self.bUseCBnoConvolution)
-        
         rfvSigRate_VBF = ROOT.RooFormulaVar("qqH_norm","@0*@1*@2*1000*{0}*{2}/{1}*{3}".format(self.lumi,rrvNormSig.getVal(),integral_VBF,self.getVariable(rfvTag_Ratio_qqH.getVal(),one.getVal(),self.bVBF)),ROOT.RooArgList(rfvSigEff_qqH, rhfXsBrFuncV_2,customEff_qqH))
-        
-        
         rfvSigRate_WH = ROOT.RooFormulaVar("WH_norm","@0*@1*1000*{0}*{2}/{1}*{3}".format(self.lumi,rrvNormSig.getVal(),integral_WH,self.getVariable(rfvTag_Ratio_WH.getVal(),one.getVal(),self.bVBF)),ROOT.RooArgList(rfvSigEff_WH, rhfXsBrFuncV_3))
-        
-        
         rfvSigRate_ZH = ROOT.RooFormulaVar("ZH_norm","@0*@1*1000*{0}*{2}/{1}*{3}".format(self.lumi,rrvNormSig.getVal(),integral_ZH,self.getVariable(rfvTag_Ratio_ZH.getVal(),one.getVal(),self.bVBF)),ROOT.RooArgList(rfvSigEff_ZH, rhfXsBrFuncV_4))
-        
-        
         rfvSigRate_ttH = ROOT.RooFormulaVar("ttH_norm","@0*@1*1000*{0}*{2}/{1}*{3}".format(self.lumi,rrvNormSig.getVal(),integral_ttH,self.getVariable(rfvTag_Ratio_ttH.getVal(),one.getVal(),self.bVBF)),ROOT.RooArgList(rfvSigEff_ttH, rhfXsBrFuncV_5))
-        
+
+        if self.ACindex == 1:
+            rfvSigRate_ggH = ROOT.RooFormulaVar("ggH_norm","@0*@1*@2*@3*1000*{0}*{2}/{1}*{3}".format(self.lumi,rrvNormSig.getVal(),integral_ggH,self.getVariable(rfvTag_Ratio_ggH.getVal(),one.getVal(),self.bVBF)),ROOT.RooArgList(rfvSigEff_ggH, rhfXsBrFuncV_1,customEff_ggH,VVH_AnomCoupl_Norm))
+            rfvSigRate_VBF = ROOT.RooFormulaVar("qqH_norm","@0*@1*@2*@3*1000*{0}*{2}/{1}*{3}".format(self.lumi,rrvNormSig.getVal(),integral_VBF,self.getVariable(rfvTag_Ratio_qqH.getVal(),one.getVal(),self.bVBF)),ROOT.RooArgList(rfvSigEff_qqH, rhfXsBrFuncV_2,customEff_qqH,VVHVV_AnomCoupl_Norm))
+            rfvSigRate_WH = ROOT.RooFormulaVar("WH_norm","@0*@1*@2*1000*{0}*{2}/{1}*{3}".format(self.lumi,rrvNormSig.getVal(),integral_WH,self.getVariable(rfvTag_Ratio_WH.getVal(),one.getVal(),self.bVBF)),ROOT.RooArgList(rfvSigEff_WH, rhfXsBrFuncV_3,VVHVV_AnomCoupl_Norm))
+            rfvSigRate_ZH = ROOT.RooFormulaVar("ZH_norm","@0*@1*@2*1000*{0}*{2}/{1}*{3}".format(self.lumi,rrvNormSig.getVal(),integral_ZH,self.getVariable(rfvTag_Ratio_ZH.getVal(),one.getVal(),self.bVBF)),ROOT.RooArgList(rfvSigEff_ZH, rhfXsBrFuncV_4,VVHVV_AnomCoupl_Norm))
+            rfvSigRate_ttH = ROOT.RooFormulaVar("ttH_norm","@0*@1*@2*1000*{0}*{2}/{1}*{3}".format(self.lumi,rrvNormSig.getVal(),integral_ttH,self.getVariable(rfvTag_Ratio_ttH.getVal(),one.getVal(),self.bVBF)),ROOT.RooArgList(rfvSigEff_ttH, rhfXsBrFuncV_5,VVH_AnomCoupl_Norm))
+
+
+        print "Compare integrals: integral_ggH=",integral_ggH,"  ; calculated=",self.getVariable(signalCB_ggH.createIntegral(RooArgSet(CMS_zz4l_mass),ROOT.RooFit.Range("shape")).getVal(),sig_ggH.createIntegral(RooArgSet(CMS_zz4l_mass),ROOT.RooFit.Range("shape")).getVal(),self.bUseCBnoConvolution)
+
 
         print signalCB_ggH.createIntegral(ROOT.RooArgSet(CMS_zz4l_mass)).getVal(),"   ",sig_ggH.createIntegral(ROOT.RooArgSet(CMS_zz4l_mass)).getVal()
         print signalCB_ggH.createIntegral(ROOT.RooArgSet(CMS_zz4l_mass),ROOT.RooFit.Range("shape")).getVal(),"   ",sig_ggH.createIntegral(ROOT.RooArgSet(CMS_zz4l_mass),ROOT.RooFit.Range("shape")).getVal()
@@ -2568,6 +2594,40 @@ class datacardClass:
         sigRate_WH_Shape = 1
         sigRate_ZH_Shape = 1
         sigRate_ttH_Shape = 1
+
+        ## ----------------------- Some more sanity checks for anomalous coupling portion ----------------------- ##
+
+        if self.ACindex>0:
+            print "Plots for efficiency parameterizations wrt. fai1"
+            canvasname = "c_rfv_vs_{2}_{1}TeV_{0}".format(self.appendName,self.sqrts,fai1.GetName())
+            if self.bVBF:
+                canvasname += "_{0}".format(self.VBFcat)
+            ctest = ROOT.TCanvas( canvasname, canvasname, 750, 700 )
+            ctest.cd()
+            hrfv_ggH = rfvSigRate_ggH.createHistogram("ggH",fai1)
+            hrfv_VBF = rfvSigRate_VBF.createHistogram("VBF",fai1)
+            hrfv_WH = rfvSigRate_WH.createHistogram("WH",fai1)
+            hrfv_ZH = rfvSigRate_ZH.createHistogram("ZH",fai1)
+            hrfv_ttH = rfvSigRate_ttH.createHistogram("ttH",fai1)
+#            fai1.setVal(1)
+#            print "ggH rfv: ",rfvSigEff_ggH.getVal()
+#            fai1.setVal(-1)
+#            print "ggH rfv: ",rfvSigEff_ggH.getVal()
+#            fai1.setVal(0)
+#            print "ggH rfv: ",rfvSigEff_ggH.getVal()
+            hrfv_ggH.SetLineColor(kBlue)
+            hrfv_VBF.SetLineColor(kRed)
+            hrfv_WH.SetLineColor(kGreen+2)
+            hrfv_ZH.SetLineColor(kCyan)
+            hrfv_ttH.SetLineColor(kBlack)
+            hrfv_ggH.Draw()
+            hrfv_VBF.Draw("same")
+            hrfv_WH.Draw("same")
+            hrfv_ZH.Draw("same")
+            hrfv_ttH.Draw("same")
+            canvasfullName = "{0}/figs/{1}.png".format(self.outputDir, canvasname)
+            ctest.SaveAs(canvasfullName)
+            ctest.Close()
 
              
         ## ----------------------- BACKGROUND RATES ----------------------- ##
