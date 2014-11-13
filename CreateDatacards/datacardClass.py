@@ -248,7 +248,7 @@ class datacardClass:
         fai1_name = "CMS_zz4l_fai1"
         fai1 = ROOT.RooRealVar(fai1_name, fai1_name, -1, 1)
         fai1.setVal(0)
-        fai1.setBins(200)
+        fai1.setBins(20)
         AnomCoupl_Name = "VVHrate_AnomCoupl_{0:.0f}_{1:.0f}".format(self.channel, self.sqrts)
         if self.bVBF:
             AnomCoupl_Name = "VVHrate_AnomCoupl_{0:.0f}_{1:.0f}_{2}".format(self.channel, self.sqrts,self.VBFcat)
