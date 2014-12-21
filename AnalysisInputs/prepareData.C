@@ -57,6 +57,8 @@ int sqrts    = 8;              // sqrts, used only for withPt_/withY_
 bool onlyICHEPStat = false;
 bool dumpEvents = true;
 
+bool forDjetWidth = false;
+
 #ifdef LINKMELA
 Mela* myMELA;
 #endif
@@ -97,7 +99,7 @@ void prepareData() {
   TString jetsT[3]={"DiJet     ",
 		    "Untagged  ",
 		    "Inclusive "};
-  TString energies[2]={"7TeV", "8TeV "};
+  TString energies[2]={"7TeV ", "8TeV "};
   TString channels[3]={"4mu   ",
 		       "4e    ",
 		       "2e2mu "};
@@ -128,7 +130,7 @@ int convertTreeForDatacards(TString inFile, TString outfile, bool useJET, bool V
 
   //Spin analysis variables
   float psigM4l,pbkgM4l;
-  float p0minusVA, p0hplusVA,p1minusVA,p1plusVA,p2minimalVA,p2minimalVA_qq,p2hplusVA,p2hminusVA,p2bplusVA,p1minusProdIndepVA,p1plusProdIndepVA,p2mProdIndepVA,pbkg_ProdIndep_VA;
+  float p0minusVA, p0hplusVA,p1minusVA,p1plusVA,p2minimalVA,p2minimalVA_qq,p2hplusVA,p2hminusVA,p2bplusVA,p1minusProdIndepVA,p1plusProdIndepVA,p2mProdIndepVA,pbkg_ProdIndep_VA,widthKD;
 
   treedata->SetBranchAddress("RunNumber",&run);
   //  treedata->SetBranchAddress("LumiNumber",&ls);
@@ -143,7 +145,9 @@ int convertTreeForDatacards(TString inFile, TString outfile, bool useJET, bool V
 
   treedata->SetBranchAddress("ZZPt",&pt4l);
   //treedata->SetBranchAddress("ZZRapidity",&Y4l);
-  treedata->SetBranchAddress("Fisher",&fisher);
+  //treedata->SetBranchAddress("Fisher",&fisher);
+  treedata->SetBranchAddress("D_Gamma_gg_r10",&widthKD);
+  treedata->SetBranchAddress("Djet_VAJHU", &fisher);
 
   treedata->SetBranchAddress("NJets30", &NJets_30);
 
@@ -168,10 +172,12 @@ int convertTreeForDatacards(TString inFile, TString outfile, bool useJET, bool V
   TFile* newFile  = new TFile(outfile, "RECREATE");
   newFile->cd();
   TTree* newTree = new TTree("data_obs","data_obs"); 
-  Double_t CMS_zz4l_mass, melaLD, CMS_zz4l_massErr, CMS_zz4l_massRelErr;
+  Double_t CMS_zz4l_mass, melaLD, CMS_zz4l_massErr, CMS_zz4l_massRelErr, CMS_zz4l_widthMass, CMS_zz4l_widthKD;
   Double_t pt = -99, Fisher = -99;
 
+  newTree->Branch("CMS_zz4l_widthMass", &CMS_zz4l_widthMass, "CMS_zz4l_widthMass/D");
   newTree->Branch("CMS_zz4l_mass",&CMS_zz4l_mass,"CMS_zz4l_mass/D");
+  newTree->Branch("CMS_zz4l_widthKD", &CMS_zz4l_widthKD, "CMS_zz4l_widthKD/D");
   newTree->Branch("CMS_zz4l_massErr",&CMS_zz4l_massErr,"CMS_zz4l_massErr/D");
   newTree->Branch("CMS_zz4l_massRelErr",&CMS_zz4l_massRelErr,"CMS_zz4l_massRelErr/D");
   newTree->Branch("melaLD",&melaLD,"melaLD/D");
@@ -209,8 +215,11 @@ int convertTreeForDatacards(TString inFile, TString outfile, bool useJET, bool V
     //if( NJets_30 > 0) cout << "NJets_30: " << NJets_30 << endl;
 
     if ((useJET && VBFtag && NJets_30 < 2) || (useJET && !VBFtag && NJets_30 >= 2)) continue;
+    if(mzz<100.) continue;
 
+    CMS_zz4l_widthMass = double(mzz);
     CMS_zz4l_mass = double(mzz);
+    CMS_zz4l_widthKD = double(widthKD);
     CMS_zz4l_massErr = double(mzzErr);
     CMS_zz4l_massRelErr = double(mzzErr/mzz);
     //pseudomelaLD = pseudomela;
@@ -218,6 +227,9 @@ int convertTreeForDatacards(TString inFile, TString outfile, bool useJET, bool V
     //supermelaLD = 0;
     melaLD=double(p0plus_VAJHU/(p0plus_VAJHU+bkg_VAMCFM));
     //ZZVAKD=double(p0plus_VAJHU/(bkg_VAMCFM + p0plus_VAJHU));
+
+    if((forDjetWidth && useJET && VBFtag && fisher<0.5) || (forDjetWidth && useJET && !VBFtag && fisher>=0.5)) continue;
+
     if(useJET && !VBFtag) 
       {
 	if(pt4l > 200.)
@@ -229,11 +241,12 @@ int convertTreeForDatacards(TString inFile, TString outfile, bool useJET, bool V
       }
     if(useJET && VBFtag) 
       {
-	if(fisher > 2.)
+	if(fisher > 1.)
 	  {
 	    //if fisher out of range set to middle of higest bin
-	    fisher = 1.98;
+	    fisher = 0.99;
 	  }
+    cout<<fisher<<endl;
 	Fisher = double(fisher);
       }
 
@@ -288,6 +301,8 @@ int convertTreeForDatacards(TString inFile, TString outfile, bool useJET, bool V
   newFile->Close();
   
   cout << "written: " << outfile << " entries: " << neventOut << endl << endl;
+
+  if(forDjetWidth) cout<< "HEY, THIS WAS USING A DJET > 0.5 CUT FOR THE WIDTH STUDY YOU DUMMY. MAKE SURE THAT'S WHAT YOU WANT" << endl;  
   return  neventOut;
   
 }
