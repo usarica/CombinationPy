@@ -653,17 +653,19 @@ class datacardClass:
             sigCB2d_ttH_Pt = ROOT.RooProdPdf()
         if(self.bVBF and self.VBFcat):
             
+            #print "HERE WE GOOO"
             ggHtempFileName = "{0}/ggH_fisher.root".format(self.templateDir)
             ggHtempFile = ROOT.TFile(ggHtempFileName)
-            ggHtemplate = ggHtempFile.Get("h_Fisher")
-            ggHtemplate_Up = ggHtempFile.Get("h_Fisher_up")
-            ggHtemplate_Dn = ggHtempFile.Get("h_Fisher_dn")
+            ggHtemplate = self.histogramBinFix(ggHtempFile.Get("h_Fisher"),"h_Fisher")
+            ggHtemplate_Up = self.histogramBinFix(ggHtempFile.Get("h_Fisher_up"),"h_Fisher_up")
+            ggHtemplate_Dn = self.histogramBinFix(ggHtempFile.Get("h_Fisher_dn"),"h_Fisher_dn")
 
             Fisher_ggH_dataHist = ROOT.RooDataHist("temp_ggH_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),"temp_ggH_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),ROOT.RooArgList(CMS_zz4l_mass,VD),ggHtemplate)
             Fisher_ggH_dataHist_Up = ROOT.RooDataHist("temp_ggH_Up_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),"temp_ggH_Up_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),ROOT.RooArgList(CMS_zz4l_mass,VD),ggHtemplate_Up)
             Fisher_ggH_dataHist_Dn = ROOT.RooDataHist("temp_ggH_Dn_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),"temp_ggH_Dn_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),ROOT.RooArgList(CMS_zz4l_mass,VD),ggHtemplate_Dn)
             
             TemplateName = "FisherTempDataHist_ggH_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat)
+            #FisherTemplatePdf_ggH = ROOT.RooHistPdf(TemplateName,TemplateName,ROOT.RooArgSet(CMS_zz4l_mass,VD),Fisher_ggH_dataHist)
             FisherTemplatePdf_ggH = ROOT.RooHistPdf(TemplateName,TemplateName,ROOT.RooArgSet(CMS_zz4l_mass,VD),Fisher_ggH_dataHist)
             TemplateName = "FisherTempDataHist_ggH_Up_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat)
             FisherTemplatePdf_ggH_Up = ROOT.RooHistPdf(TemplateName,TemplateName,ROOT.RooArgSet(CMS_zz4l_mass,VD),Fisher_ggH_dataHist_Up)
@@ -672,9 +674,9 @@ class datacardClass:
 
             qqHtempFileName = "{0}/qqH_fisher.root".format(self.templateDir)
             qqHtempFile = ROOT.TFile(qqHtempFileName)
-            qqHtemplate = qqHtempFile.Get("h_Fisher")
-            qqHtemplate_Up = qqHtempFile.Get("h_Fisher_up")
-            qqHtemplate_Dn = qqHtempFile.Get("h_Fisher_dn")
+            qqHtemplate = self.histogramBinFix(qqHtempFile.Get("h_Fisher"),"h_Fisher")
+            qqHtemplate_Up = self.histogramBinFix(qqHtempFile.Get("h_Fisher_up"),"h_Fisher_up")
+            qqHtemplate_Dn = self.histogramBinFix(qqHtempFile.Get("h_Fisher_dn"),"h_Fisher_dn")
             
             Fisher_qqH_dataHist = ROOT.RooDataHist("temp_qqH_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),"temp_qqH_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),ROOT.RooArgList(CMS_zz4l_mass,VD),qqHtemplate)
             Fisher_qqH_dataHist_Up = ROOT.RooDataHist("temp_qqH_Up_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),"temp_qqH_Up_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),ROOT.RooArgList(CMS_zz4l_mass,VD),qqHtemplate_Up)
@@ -689,7 +691,7 @@ class datacardClass:
 
             WHtempFileName = "{0}/WH_fisher.root".format(self.templateDir)
             WHtempFile = ROOT.TFile(WHtempFileName)
-            WHtemplate = WHtempFile.Get("h_Fisher")
+            WHtemplate = self.histogramBinFix(WHtempFile.Get("h_Fisher"),"h_Fisher")
             
             
             Fisher_WH_dataHist = ROOT.RooDataHist("temp_WH_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),"temp_WH_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),ROOT.RooArgList(CMS_zz4l_mass,VD),WHtemplate)
@@ -699,7 +701,7 @@ class datacardClass:
 
             ZHtempFileName = "{0}/ZH_fisher.root".format(self.templateDir)
             ZHtempFile = ROOT.TFile(ZHtempFileName)
-            ZHtemplate = ZHtempFile.Get("h_Fisher")
+            ZHtemplate = self.histogramBinFix(ZHtempFile.Get("h_Fisher"),"h_Fisher")
             
             Fisher_ZH_dataHist = ROOT.RooDataHist("temp_ZH_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),"temp_ZH_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),ROOT.RooArgList(CMS_zz4l_mass,VD),ZHtemplate)
             
@@ -708,7 +710,7 @@ class datacardClass:
 
             ttHtempFileName = "{0}/ttH_fisher.root".format(self.templateDir)
             ttHtempFile = ROOT.TFile(ttHtempFileName)
-            ttHtemplate = ttHtempFile.Get("h_Fisher")
+            ttHtemplate = self.histogramBinFix(ttHtempFile.Get("h_Fisher"),"h_Fisher")
             
             Fisher_ttH_dataHist = ROOT.RooDataHist("temp_ttH_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),"temp_ttH_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),ROOT.RooArgList(CMS_zz4l_mass,VD),ttHtemplate)
             
@@ -806,9 +808,9 @@ class datacardClass:
             
             ggHtempPtFileName = "{0}/Pt_mZZ_gg_{1}_{2:d}TeV.root".format(self.templateDir,self.appendName,int(self.sqrts))
             ggHtempPtFile = ROOT.TFile(ggHtempPtFileName)
-            ggHtemplatePt = ggHtempPtFile.Get("h_Ptmzz_mzz")
-            ggHtemplatePt_Up = ggHtempPtFile.Get("h_Ptmzz_mzz_OneSyst_up")
-            ggHtemplatePt_Dn = ggHtempPtFile.Get("h_Ptmzz_mzz_OneSyst_down")            
+            ggHtemplatePt = self.histogramBinFix(ggHtempPtFile.Get("h_Ptmzz_mzz"),"h_Ptmzz_mzz")
+            ggHtemplatePt_Up = self.histogramBinFix(ggHtempPtFile.Get("h_Ptmzz_mzz_OneSyst_up"),"h_Ptmzz_mzz_OneSyst_up")
+            ggHtemplatePt_Dn = self.histogramBinFix(ggHtempPtFile.Get("h_Ptmzz_mzz_OneSyst_down"),"h_Ptmzz_mzz_OneSyst_down")            
             
             Pt_ggH_dataHist = ROOT.RooDataHist("tempPt_ggH_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),"tempPt_ggH_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),ROOT.RooArgList(CMS_zz4l_mass,pt),ggHtemplatePt)
             Pt_ggH_dataHist_Up = ROOT.RooDataHist("tempPt_ggH_Up_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),"tempPt_ggH_Up_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),ROOT.RooArgList(CMS_zz4l_mass,pt),ggHtemplatePt_Up)
@@ -823,9 +825,9 @@ class datacardClass:
 
             qqHtempPtFileName = "{0}/Pt_mZZ_vbf_{1}_{2:d}TeV.root".format(self.templateDir,self.appendName,int(self.sqrts))
             qqHtempPtFile = ROOT.TFile(qqHtempPtFileName)
-            qqHtemplatePt = qqHtempPtFile.Get("h_Ptmzz_mzz")
-            qqHtemplatePt_Up = qqHtempPtFile.Get("h_Ptmzz_mzz_OneSyst_up")
-            qqHtemplatePt_Dn = qqHtempPtFile.Get("h_Ptmzz_mzz_OneSyst_down")            
+            qqHtemplatePt = self.histogramBinFix(qqHtempPtFile.Get("h_Ptmzz_mzz"),"h_Ptmzz_mzz")
+            qqHtemplatePt_Up = self.histogramBinFix(qqHtempPtFile.Get("h_Ptmzz_mzz_OneSyst_up"),"h_Ptmzz_mzz_OneSyst_up")
+            qqHtemplatePt_Dn = self.histogramBinFix(qqHtempPtFile.Get("h_Ptmzz_mzz_OneSyst_down"),"h_Ptmzz_mzz_OneSyst_down")            
             
             Pt_qqH_dataHist = ROOT.RooDataHist("tempPt_qqH_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),"tempPt_qqH_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),ROOT.RooArgList(CMS_zz4l_mass,pt),qqHtemplatePt)
             Pt_qqH_dataHist_Up = ROOT.RooDataHist("tempPt_qqH_Up_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),"tempPt_qqH_Up_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),ROOT.RooArgList(CMS_zz4l_mass,pt),qqHtemplatePt_Up)
@@ -840,9 +842,9 @@ class datacardClass:
 
             ttHtempPtFileName = "{0}/Pt_mZZ_tth_{1}_{2:d}TeV.root".format(self.templateDir,self.appendName,int(self.sqrts))
             ttHtempPtFile = ROOT.TFile(ttHtempPtFileName)
-            ttHtemplatePt = ttHtempPtFile.Get("h_Ptmzz_mzz")
-            ttHtemplatePt_Up = ttHtempPtFile.Get("h_Ptmzz_mzz_OneSyst_up")
-            ttHtemplatePt_Dn = ttHtempPtFile.Get("h_Ptmzz_mzz_OneSyst_down")            
+            ttHtemplatePt = self.histogramBinFix(ttHtempPtFile.Get("h_Ptmzz_mzz"),"h_Ptmzz_mzz")
+            ttHtemplatePt_Up = self.histogramBinFix(ttHtempPtFile.Get("h_Ptmzz_mzz_OneSyst_up"),"h_Ptmzz_mzz_OneSyst_up")
+            ttHtemplatePt_Dn = self.histogramBinFix(ttHtempPtFile.Get("h_Ptmzz_mzz_OneSyst_down"),"h_Ptmzz_mzz_OneSyst_down")            
             
             Pt_ttH_dataHist = ROOT.RooDataHist("tempPt_ttH_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),"tempPt_ttH_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),ROOT.RooArgList(CMS_zz4l_mass,pt),ttHtemplatePt)
             Pt_ttH_dataHist_Up = ROOT.RooDataHist("tempPt_ttH_Up_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),"tempPt_ttH_Up_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),ROOT.RooArgList(CMS_zz4l_mass,pt),ttHtemplatePt_Up)
@@ -857,9 +859,9 @@ class datacardClass:
 
             WHtempPtFileName = "{0}/Pt_mZZ_wh_{1}_{2:d}TeV.root".format(self.templateDir,self.appendName,int(self.sqrts))
             WHtempPtFile = ROOT.TFile(WHtempPtFileName)
-            WHtemplatePt = WHtempPtFile.Get("h_Ptmzz_mzz")
-            WHtemplatePt_Up = WHtempPtFile.Get("h_Ptmzz_mzz_OneSyst_up")
-            WHtemplatePt_Dn = WHtempPtFile.Get("h_Ptmzz_mzz_OneSyst_down")            
+            WHtemplatePt = self.histogramBinFix(WHtempPtFile.Get("h_Ptmzz_mzz"),"h_Ptmzz_mzz")
+            WHtemplatePt_Up = self.histogramBinFix(WHtempPtFile.Get("h_Ptmzz_mzz_OneSyst_up"),"h_Ptmzz_mzz_OneSyst_up")
+            WHtemplatePt_Dn = self.histogramBinFix(WHtempPtFile.Get("h_Ptmzz_mzz_OneSyst_down"),"h_Ptmzz_mzz_OneSyst_down")            
             
             Pt_WH_dataHist = ROOT.RooDataHist("tempPt_WH_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),"tempPt_WH_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),ROOT.RooArgList(CMS_zz4l_mass,pt),WHtemplatePt)
             Pt_WH_dataHist_Up = ROOT.RooDataHist("tempPt_WH_Up_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),"tempPt_WH_Up_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),ROOT.RooArgList(CMS_zz4l_mass,pt),WHtemplatePt_Up)
@@ -874,9 +876,9 @@ class datacardClass:
 
             ZHtempPtFileName = "{0}/Pt_mZZ_zh_{1}_{2:d}TeV.root".format(self.templateDir,self.appendName,int(self.sqrts))
             ZHtempPtFile = ROOT.TFile(ZHtempPtFileName)
-            ZHtemplatePt = ZHtempPtFile.Get("h_Ptmzz_mzz")
-            ZHtemplatePt_Up = ZHtempPtFile.Get("h_Ptmzz_mzz_OneSyst_up")
-            ZHtemplatePt_Dn = ZHtempPtFile.Get("h_Ptmzz_mzz_OneSyst_down")            
+            ZHtemplatePt = self.histogramBinFix(ZHtempPtFile.Get("h_Ptmzz_mzz"),"h_Ptmzz_mzz")
+            ZHtemplatePt_Up = self.histogramBinFix(ZHtempPtFile.Get("h_Ptmzz_mzz_OneSyst_up"),"h_Ptmzz_mzz_OneSyst_up")
+            ZHtemplatePt_Dn = self.histogramBinFix(ZHtempPtFile.Get("h_Ptmzz_mzz_OneSyst_down"),"h_Ptmzz_mzz_OneSyst_down")            
             
             Pt_ZH_dataHist = ROOT.RooDataHist("tempPt_ZH_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),"tempPt_ZH_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),ROOT.RooArgList(CMS_zz4l_mass,pt),ZHtemplatePt)
             Pt_ZH_dataHist_Up = ROOT.RooDataHist("tempPt_ZH_Up_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),"tempPt_ZH_Up_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),ROOT.RooArgList(CMS_zz4l_mass,pt),ZHtemplatePt_Up)
@@ -991,9 +993,9 @@ class datacardClass:
         templateSigName = "{0}/Dsignal_{1}.root".format(self.templateDir ,self.appendName)
         
         sigTempFile = ROOT.TFile(templateSigName)
-        sigTemplate = sigTempFile.Get("h_mzzD")
-        sigTemplate_Up = sigTempFile.Get("h_mzzD_up")
-        sigTemplate_Down = sigTempFile.Get("h_mzzD_dn")
+        sigTemplate = self.histogramBinFix(sigTempFile.Get("h_mzzD"),"h_mzzD")
+        sigTemplate_Up = self.histogramBinFix(sigTempFile.Get("h_mzzD_up"),"h_mzzD_up")
+        sigTemplate_Down = self.histogramBinFix(sigTempFile.Get("h_mzzD_dn"),"h_mzzD_dn")
 
         dBins = sigTemplate.GetYaxis().GetNbins()
         dLow = sigTemplate.GetYaxis().GetXmin()
@@ -1093,9 +1095,9 @@ class datacardClass:
               templateSigName = "{0}/Dsignal{2}_{1}.root".format(self.templateDir,self.appendName, self.appendHypType)
               print 'Taking 2D template for ALT signal from ',templateSigName
               sigTempFile = ROOT.TFile(templateSigName)
-              sigTemplate = sigTempFile.Get("h_mzzD")
-              sigTemplate_Up = sigTempFile.Get("h_mzzD_up")
-              sigTemplate_Down = sigTempFile.Get("h_mzzD_dn")
+              sigTemplate = self.histogramBinFix(sigTempFile.Get("h_mzzD"),"h_mzzD")
+              sigTemplate_Up = self.histogramBinFix(sigTempFile.Get("h_mzzD_up"),"h_mzzD_up")
+              sigTemplate_Down = self.histogramBinFix(sigTempFile.Get("h_mzzD_dn"),"h_mzzD_dn")
               
               TemplateName = "sigTempDataHist_{0:.0f}_{1:.0f}{2}".format(self.channel,self.sqrts, self.appendHypType)
               sigTempDataHist_ALT = ROOT.RooDataHist(TemplateName,TemplateName,ROOT.RooArgList(CMS_zz4l_mass,D),sigTemplate)
@@ -1674,9 +1676,9 @@ class datacardClass:
             
             qqZZtempFileName = "{0}/qqZZ_fisher.root".format(self.templateDir)
             qqZZtempFile = ROOT.TFile(qqZZtempFileName)
-            qqZZtemplate = qqZZtempFile.Get("h_Fisher")
-            qqZZtemplate_Up = qqZZtempFile.Get("h_Fisher_up")
-            qqZZtemplate_Dn = qqZZtempFile.Get("h_Fisher_dn")
+            qqZZtemplate = self.histogramBinFix(qqZZtempFile.Get("h_Fisher"),"h_Fisher")
+            qqZZtemplate_Up = self.histogramBinFix(qqZZtempFile.Get("h_Fisher_up"),"h_Fisher_up")
+            qqZZtemplate_Dn = self.histogramBinFix(qqZZtempFile.Get("h_Fisher_dn"),"h_Fisher_dn")
 
             Fisher_qqZZ_dataHist = ROOT.RooDataHist("temp_qqZZ_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),"temp_qqZZ_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),ROOT.RooArgList(CMS_zz4l_mass,VD),qqZZtemplate)
             Fisher_qqZZ_dataHist_Up = ROOT.RooDataHist("temp_qqZZ_Up_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),"temp_qqZZ_Up_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),ROOT.RooArgList(CMS_zz4l_mass,VD),qqZZtemplate_Up)
@@ -1691,7 +1693,7 @@ class datacardClass:
 
             ggZZtempFileName = "{0}/ggZZ_fisher.root".format(self.templateDir)
             ggZZtempFile = ROOT.TFile(ggZZtempFileName)
-            ggZZtemplate = ggZZtempFile.Get("h_Fisher")
+            ggZZtemplate = self.histogramBinFix(ggZZtempFile.Get("h_Fisher"),"h_Fisher")
             
             Fisher_ggZZ_dataHist = ROOT.RooDataHist("temp_ggZZ_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),"temp_ggZZ_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),ROOT.RooArgList(CMS_zz4l_mass,VD),ggZZtemplate)
             
@@ -1700,7 +1702,7 @@ class datacardClass:
 
             ZXtempFileName = "{0}/Z+X_fisher.root".format(self.templateDir)
             ZXtempFile = ROOT.TFile(ZXtempFileName)
-            ZXtemplate = ZXtempFile.Get("h_Fisher")
+            ZXtemplate = self.histogramBinFix(ZXtempFile.Get("h_Fisher"),"h_Fisher")
             
             Fisher_ZX_dataHist = ROOT.RooDataHist("temp_ZX_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),"temp_ZX_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),ROOT.RooArgList(CMS_zz4l_mass,VD),ZXtemplate)
             
@@ -1761,9 +1763,9 @@ class datacardClass:
         if(self.bVBF and not self.VBFcat):
             qqZZtempPtFileName = "{0}/Pt_mZZ_zz_{1}_{2:d}TeV.root".format(self.templateDir,self.appendName,int(self.sqrts))
             qqZZtempPtFile = ROOT.TFile(qqZZtempPtFileName)
-            qqZZtemplatePt = qqZZtempPtFile.Get("h_Ptmzz_mzz")            
-            qqZZtemplatePt_Up = ggHtempPtFile.Get("h_Ptmzz_mzz_OneSyst_up")
-            qqZZtemplatePt_Dn = ggHtempPtFile.Get("h_Ptmzz_mzz_OneSyst_down")            
+            qqZZtemplatePt = self.histogramBinFix(qqZZtempPtFile.Get("h_Ptmzz_mzz"),"h_Ptmzz_mzz")            
+            qqZZtemplatePt_Up = self.histogramBinFix(ggHtempPtFile.Get("h_Ptmzz_mzz_OneSyst_up"),"h_Ptmzz_mzz_OneSyst_up")
+            qqZZtemplatePt_Dn = self.histogramBinFix(ggHtempPtFile.Get("h_Ptmzz_mzz_OneSyst_down"),"h_Ptmzz_mzz_OneSyst_down")            
             
             Pt_qqZZ_dataHist = ROOT.RooDataHist("tempPt_qqZZ_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),"tempPt_qqZZ_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),ROOT.RooArgList(CMS_zz4l_mass,pt),qqZZtemplatePt)
             Pt_qqZZ_dataHist_Up = ROOT.RooDataHist("tempPt_qqZZ_Up_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),"tempPt_qqZZ_Up_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),ROOT.RooArgList(CMS_zz4l_mass,pt),qqZZtemplatePt_Up)
@@ -1778,9 +1780,9 @@ class datacardClass:
             
             ggZZtempPtFileName = "{0}/Pt_mZZ_ggzz_{1}_{2:d}TeV.root".format(self.templateDir,self.appendName,int(self.sqrts))
             ggZZtempPtFile = ROOT.TFile(ggZZtempPtFileName)
-            ggZZtemplatePt = ggZZtempPtFile.Get("h_Ptmzz_mzz")
-            ggZZtemplatePt_Up = ggZZtempPtFile.Get("h_Ptmzz_mzz_OneSyst_up")
-            ggZZtemplatePt_Dn = ggZZtempPtFile.Get("h_Ptmzz_mzz_OneSyst_down")            
+            ggZZtemplatePt = self.histogramBinFix(ggZZtempPtFile.Get("h_Ptmzz_mzz"),"h_Ptmzz_mzz")
+            ggZZtemplatePt_Up = self.histogramBinFix(ggZZtempPtFile.Get("h_Ptmzz_mzz_OneSyst_up"),"h_Ptmzz_mzz_OneSyst_up")
+            ggZZtemplatePt_Dn = self.histogramBinFix(ggZZtempPtFile.Get("h_Ptmzz_mzz_OneSyst_down"),"h_Ptmzz_mzz_OneSyst_down")            
             
             Pt_ggZZ_dataHist = ROOT.RooDataHist("tempPt_ggZZ_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),"tempPt_ggZZ_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),ROOT.RooArgList(CMS_zz4l_mass,pt),ggZZtemplatePt)
             Pt_ggZZ_dataHist_Up = ROOT.RooDataHist("tempPt_ggZZ_Up_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),"tempPt_ggZZ_Up_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),ROOT.RooArgList(CMS_zz4l_mass,pt),ggZZtemplatePt_Up)
@@ -1795,9 +1797,9 @@ class datacardClass:
 
             ZXtempPtFileName = "{0}/Pt_mZZ_zx_{1}_{2:d}TeV.root".format(self.templateDir,self.appendName,int(self.sqrts))
             ZXtempPtFile = ROOT.TFile(ZXtempPtFileName)
-            ZXtemplatePt = ZXtempPtFile.Get("h_Ptmzz_mzz")
-            ZXtemplatePt_Up = ZXtempPtFile.Get("h_Ptmzz_mzz_OneSyst_up")
-            ZXtemplatePt_Dn = ZXtempPtFile.Get("h_Ptmzz_mzz_OneSyst_down")            
+            ZXtemplatePt = self.histogramBinFix(ZXtempPtFile.Get("h_Ptmzz_mzz"),"h_Ptmzz_mzz")
+            ZXtemplatePt_Up = self.histogramBinFix(ZXtempPtFile.Get("h_Ptmzz_mzz_OneSyst_up"),"h_Ptmzz_mzz_OneSyst_up")
+            ZXtemplatePt_Dn = self.histogramBinFix(ZXtempPtFile.Get("h_Ptmzz_mzz_OneSyst_down"),"h_Ptmzz_mzz_OneSyst_down")            
             
             Pt_ZX_dataHist = ROOT.RooDataHist("tempPt_ZX_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),"tempPt_ZX_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),ROOT.RooArgList(CMS_zz4l_mass,pt),ZXtemplatePt)
             Pt_ZX_dataHist_Up = ROOT.RooDataHist("tempPt_ZX_Up_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),"tempPt_ZX_Up_{0:.0f}_{1:.0f}_{2}".format(self.channel,self.sqrts,self.VBFcat),ROOT.RooArgList(CMS_zz4l_mass,pt),ZXtemplatePt_Up)
@@ -1881,7 +1883,7 @@ class datacardClass:
         print templateBkgName, "file used for ZZ"
         
         bkgTempFile = ROOT.TFile(templateBkgName)
-        bkgTemplate = bkgTempFile.Get("h_mzzD")
+        bkgTemplate = self.histogramBinFix(bkgTempFile.Get("h_mzzD"),"h_mzzD")
         
         TemplateName = "bkgTempDataHist_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
         if(self.bVBF):
@@ -1891,7 +1893,7 @@ class datacardClass:
         
         templateggBkgName = "{0}/Dbackground_ggZZ_{1}.root".format(self.templateDir ,self.appendName)
         ggbkgTempFile = ROOT.TFile(templateggBkgName)
-        ggbkgTemplate = ggbkgTempFile.Get("h_mzzD")
+        ggbkgTemplate = self.histogramBinFix(ggbkgTempFile.Get("h_mzzD"),"h_mzzD")
         TemplateName = "ggbkgTempDataHist_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
         if(self.bVBF):
             TemplateName += "_{0}".format(self.VBFcat)
@@ -1913,9 +1915,9 @@ class datacardClass:
         print templatezxBkgName, "file used for ZX"
 
         zxbkgTempFile = ROOT.TFile(templatezxBkgName)
-        zxbkgTemplate = zxbkgTempFile.Get("h_mzzD")
-        zxbkgTemplate_Up = zxbkgTempFile.Get("h_mzzD_up")
-        zxbkgTemplate_Down = zxbkgTempFile.Get("h_mzzD_dn")
+        zxbkgTemplate = self.histogramBinFix(zxbkgTempFile.Get("h_mzzD"),"h_mzzD")
+        zxbkgTemplate_Up = self.histogramBinFix(zxbkgTempFile.Get("h_mzzD_up"),"h_mzzD_up")
+        zxbkgTemplate_Down = self.histogramBinFix(zxbkgTempFile.Get("h_mzzD_dn"),"h_mzzD_dn")
 
         TemplateName = "zjetsTempDataHist_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
         if(self.bVBF):
@@ -2689,6 +2691,8 @@ class datacardClass:
         
         ## --------------------------- DATASET --------------------------- ##
 
+        CMS_zz4l_mass.setRange("shape",self.low_M,self.high_M)
+
         dataFileDir = "CMSdata"
         dataTreeName = "data_obs" 
         if not self.bVBF:
@@ -2786,6 +2790,7 @@ class datacardClass:
             
                 
                 
+        CMS_zz4l_mass.setRange("shape",self.low_M,self.high_M)
         getattr(w,'import')(data_obs,ROOT.RooFit.Rename("data_obs")) ### Should this be renamed?
     
         if(self.bUseCBnoConvolution) :
@@ -3174,4 +3179,31 @@ class datacardClass:
         if inputs['zbb']:   counter+=1
         
         return counter
+
+    def histogramBinFix(self,hist,histname):
+
+        dBinsX = hist.GetXaxis().GetNbins()
+        dBinsY = hist.GetYaxis().GetNbins()
+        dLowY = hist.GetYaxis().GetXmin()
+        dHighY = hist.GetYaxis().GetXmax()
+
+        xBins = array('d', [self.low_M])
+        nBinsNew = 0
+        for nxbin in range(1,dBinsX):
+            if self.low_M<hist.GetXaxis().GetBinLowEdge(nxbin):
+                if self.high_M>hist.GetXaxis().GetBinLowEdge(nxbin):
+                    xBins.append(hist.GetXaxis().GetBinLowEdge(nxbin))
+                    nBinsNew+=1
+        xBins.append(self.high_M)
+        print xBins
+
+        hist_fix = ROOT.TH2F(histname,histname,nBinsNew+1,xBins,dBinsY,dLowY,dHighY)
+
+        for nxbin in range(1,hist_fix.GetXaxis().GetNbins()+1):
+            for nybin in range(1,hist_fix.GetYaxis().GetNbins()+1):
+                binnum = hist.FindBin(hist_fix.GetXaxis().GetBinCenter(nxbin),hist_fix.GetYaxis().GetBinCenter(nybin))
+                binval = hist.GetBinContent(binnum)
+                hist_fix.SetBinContent(binnum,binval)
+
+        return hist_fix
 
