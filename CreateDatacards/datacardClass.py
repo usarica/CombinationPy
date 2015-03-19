@@ -3187,6 +3187,7 @@ class datacardClass:
         dLowY = hist.GetYaxis().GetXmin()
         dHighY = hist.GetYaxis().GetXmax()
 
+
         xBins = array('d', [self.low_M])
         nBinsNew = 0
         for nxbin in range(1,dBinsX):
@@ -3195,15 +3196,23 @@ class datacardClass:
                     xBins.append(hist.GetXaxis().GetBinLowEdge(nxbin))
                     nBinsNew+=1
         xBins.append(self.high_M)
+
         print xBins
 
         hist_fix = ROOT.TH2F(histname,histname,nBinsNew+1,xBins,dBinsY,dLowY,dHighY)
 
-        for nxbin in range(1,hist_fix.GetXaxis().GetNbins()+1):
-            for nybin in range(1,hist_fix.GetYaxis().GetNbins()+1):
+        print hist.GetXaxis().GetNbins(), hist.GetXaxis().GetXmin(), hist.GetXaxis().GetXmax()
+        print hist.GetYaxis().GetNbins(), hist.GetYaxis().GetXmin(), hist.GetYaxis().GetXmax()
+        print hist_fix.GetXaxis().GetNbins(), hist_fix.GetXaxis().GetXmin(), hist_fix.GetXaxis().GetXmax()
+        print hist_fix.GetYaxis().GetNbins(), hist_fix.GetYaxis().GetXmin(), hist_fix.GetYaxis().GetXmax()
+
+
+        for nybin in range(1,hist_fix.GetYaxis().GetNbins()+1):
+            for nxbin in range(1,hist_fix.GetXaxis().GetNbins()+1):
                 binnum = hist.FindBin(hist_fix.GetXaxis().GetBinCenter(nxbin),hist_fix.GetYaxis().GetBinCenter(nybin))
                 binval = hist.GetBinContent(binnum)
-                hist_fix.SetBinContent(binnum,binval)
+                currentbin = hist_fix.FindBin(hist_fix.GetXaxis().GetBinCenter(nxbin),hist_fix.GetYaxis().GetBinCenter(nybin))
+                hist_fix.SetBinContent(currentbin,binval)
 
         return hist_fix
 
