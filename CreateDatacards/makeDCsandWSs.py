@@ -3,10 +3,10 @@
 # Latest update: 2012.08.30
 # by Matt Snowball
 #-----------------------------------------------
-import sys, os, pwd, commands
-import optparse, shlex, re
+import sys, os
+import commands
+import optparse
 import math
-from ROOT import *
 import ROOT
 from array import array
 from datacardClass import *
@@ -18,7 +18,7 @@ def parseOptions():
     usage = ('usage: %prog [options] datasetList\n'
              + '%prog -h for help')
     parser = optparse.OptionParser(usage)
-    
+
     parser.add_option('-i', '--input', dest='inputDir', type='string', default="",    help='inputs directory')
     parser.add_option('-d', '--is2D',   dest='is2D',       type='int',    default=1,     help='is2D (default:1)')
     parser.add_option('-a', '--append', dest='appendName', type='string', default="",    help='append name for cards dir')
@@ -29,7 +29,7 @@ def parseOptions():
     parser.add_option('-j', '--jet', dest='useJET', type='int', default=0, help='useJET (default:0)')
     parser.add_option('-c', '--AnomCoupl', type='int', dest='anomalousCouplingIndex', default="0", help='anomalousCouplingIndex: 0: SM-only, 1: fLQ')
 
-    
+
     # store options and arguments as global variables
     global opt, args
     (opt, args) = parser.parse_args()
@@ -52,7 +52,7 @@ def parseOptions():
 
 
 
-    
+
 # define make directory function
 def makeDirectory(subDirName):
     if (not os.path.exists(subDirName)):
@@ -78,7 +78,7 @@ def processCmd(cmd):
 
 def creationLoop(directory):
     global opt, args
-    
+
 #    startMass=[ 380.0, 400.0, 600.0 ]
 #    stepSizes=[ 10.0,   20.0, 50.0 ]
 #    endVal=[ 1, 10, 9 ]
@@ -87,7 +87,7 @@ def creationLoop(directory):
 #    stepSizes=[  2.0,   5.0,   10.0,  20.0,  50.0 ]
 #    endVal   =[   45,    12,    4,     10,    9   ]
 
-    startMass=[ 125.6]
+    startMass=[ 125.]
     stepSizes=[ 0.1]
     endVal=[     1]
 
@@ -107,11 +107,11 @@ def creationLoop(directory):
         myReader4e = inputReader(opt.inputDir+"/inputs_4e.txt")
         myReader4e.readInputs()
         theInputs4e = myReader4e.getInputs()
-        
+
         myReader4mu = inputReader(opt.inputDir+"/inputs_4mu.txt")
         myReader4mu.readInputs()
         theInputs4mu = myReader4mu.getInputs()
-        
+
         myReader2e2mu = inputReader(opt.inputDir+"/inputs_2e2mu.txt")
         myReader2e2mu.readInputs()
         theInputs2e2mu = myReader2e2mu.getInputs()
@@ -120,11 +120,11 @@ def creationLoop(directory):
         myReader4e_0 = inputReader(opt.inputDir+"_tagged/inputs_4e_0.txt")
         myReader4e_0.readInputs()
         theInputs4e_0 = myReader4e_0.getInputs()
-        
+
         myReader4mu_0 = inputReader(opt.inputDir+"_tagged/inputs_4mu_0.txt")
         myReader4mu_0.readInputs()
         theInputs4mu_0 = myReader4mu_0.getInputs()
-        
+
         myReader2e2mu_0 = inputReader(opt.inputDir+"_tagged/inputs_2e2mu_0.txt")
         myReader2e2mu_0.readInputs()
         theInputs2e2mu_0 = myReader2e2mu_0.getInputs()
@@ -132,25 +132,25 @@ def creationLoop(directory):
         myReader4e_1 = inputReader(opt.inputDir+"_tagged/inputs_4e_1.txt")
         myReader4e_1.readInputs()
         theInputs4e_1 = myReader4e_1.getInputs()
-        
+
         myReader4mu_1 = inputReader(opt.inputDir+"_tagged/inputs_4mu_1.txt")
         myReader4mu_1.readInputs()
         theInputs4mu_1 = myReader4mu_1.getInputs()
-        
+
         myReader2e2mu_1 = inputReader(opt.inputDir+"_tagged/inputs_2e2mu_1.txt")
         myReader2e2mu_1.readInputs()
-        theInputs2e2mu_1 = myReader2e2mu_1.getInputs() 
+        theInputs2e2mu_1 = myReader2e2mu_1.getInputs()
 
-    
+
     a=0
     while (a < len(startMass) ):
-	
+
 	c = 0
-        while (c < endVal[a] ): 
-            
+        while (c < endVal[a] ):
+
             mStart = startMass[a]
             step = stepSizes[a]
-            mh = mStart + ( step * c ) 
+            mh = mStart + ( step * c )
             mhs = str(mh).replace('.0','')
 
             print mh
@@ -166,7 +166,7 @@ def creationLoop(directory):
                 myClass.makeCardsWorkspaces(mh,opt.is2D,directory+'_tagged',theInputs4e_0,opt,0,1)
                 myClass.makeCardsWorkspaces(mh,opt.is2D,directory+'_tagged',theInputs4mu_0,opt,0,1)
                 myClass.makeCardsWorkspaces(mh,opt.is2D,directory+'_tagged',theInputs2e2mu_0,opt,0,1)
-                
+
                 myClass.makeCardsWorkspaces(mh,opt.is2D,directory+'_tagged',theInputs4e_1,opt,1,1)
                 myClass.makeCardsWorkspaces(mh,opt.is2D,directory+'_tagged',theInputs4mu_1,opt,1,1)
                 myClass.makeCardsWorkspaces(mh,opt.is2D,directory+'_tagged',theInputs2e2mu_1,opt,1,1)
@@ -177,7 +177,7 @@ def creationLoop(directory):
                 myClass.makeCardsWorkspaces(mh,opt.is2D,directory+'_tagged',theInputs4e_0,opt,0,0)
                 myClass.makeCardsWorkspaces(mh,opt.is2D,directory+'_tagged',theInputs4mu_0,opt,0,0)
                 myClass.makeCardsWorkspaces(mh,opt.is2D,directory+'_tagged',theInputs2e2mu_0,opt,0,0)
-                
+
                 myClass.makeCardsWorkspaces(mh,opt.is2D,directory+'_tagged',theInputs4e_1,opt,1,1)
                 myClass.makeCardsWorkspaces(mh,opt.is2D,directory+'_tagged',theInputs4mu_1,opt,1,1)
                 myClass.makeCardsWorkspaces(mh,opt.is2D,directory+'_tagged',theInputs2e2mu_1,opt,1,1)
@@ -188,7 +188,7 @@ def creationLoop(directory):
                 myClass.makeCardsWorkspaces(mh,opt.is2D,directory+'_tagged',theInputs4e_0,opt,0,1)
                 myClass.makeCardsWorkspaces(mh,opt.is2D,directory+'_tagged',theInputs4mu_0,opt,0,1)
                 myClass.makeCardsWorkspaces(mh,opt.is2D,directory+'_tagged',theInputs2e2mu_0,opt,0,1)
-                
+
                 myClass.makeCardsWorkspaces(mh,opt.is2D,directory+'_tagged',theInputs4e_1,opt,1,0)
                 myClass.makeCardsWorkspaces(mh,opt.is2D,directory+'_tagged',theInputs4mu_1,opt,1,0)
                 myClass.makeCardsWorkspaces(mh,opt.is2D,directory+'_tagged',theInputs2e2mu_1,opt,1,0)
@@ -199,13 +199,13 @@ def creationLoop(directory):
                 myClass.makeCardsWorkspaces(mh,opt.is2D,directory+'_tagged',theInputs4e_0,opt,0,0)
                 myClass.makeCardsWorkspaces(mh,opt.is2D,directory+'_tagged',theInputs4mu_0,opt,0,0)
                 myClass.makeCardsWorkspaces(mh,opt.is2D,directory+'_tagged',theInputs2e2mu_0,opt,0,0)
-                
+
                 myClass.makeCardsWorkspaces(mh,opt.is2D,directory+'_tagged',theInputs4e_1,opt,1,0)
                 myClass.makeCardsWorkspaces(mh,opt.is2D,directory+'_tagged',theInputs4mu_1,opt,1,0)
                 myClass.makeCardsWorkspaces(mh,opt.is2D,directory+'_tagged',theInputs2e2mu_1,opt,1,0)
-                
+
             c += 1
-            
+
 
 	a += 1
 
@@ -216,27 +216,27 @@ def creationLoop(directory):
 
 # the main procedure
 def makeDCsandWSs():
-    
+
     # parse the arguments and options
     global opt, args
     parseOptions()
 
     if (opt.appendName != ''):
         dirName = 'cards_'+opt.appendName
-    
+
 
     subdir = ['HCG','HCG_XSxBR','figs']
 
     for d in subdir:
         if (opt.useJET == 1 or opt.useJET == 2 or opt.useJET == 3 or opt.useJET == 4):
-            
+
             makeDirectory(dirName+'_tagged/'+d)
         else:
             makeDirectory(dirName+'/'+d)
-        
+
 
     creationLoop(dirName)
-    
+
 
     sys.exit()
 
